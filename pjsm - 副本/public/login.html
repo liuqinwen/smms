@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市登录界面</title>
+    <!-- 引入elementui样式 -->
+    <link rel="stylesheet" href="./libs/elementui/css/elementui.css">
+    <!-- 引入自己的样式 -->
+    <link rel="stylesheet" href="./css/login.css">
+    <!-- 引入jquery -->
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./libs/vue/vue.js"></script>
+    <!-- 引入elementui.js -->
+    <script src="./libs/elementui/js/elementui.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div id="box1">
+            <h1 id="title">超市管理系统登录</h1>
+            <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="用户名" prop="username">
+                    <el-input type="text" v-model="loginForm.username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="pass">
+                    <el-input type="password" v-model="loginForm.pass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="checkPass">
+                    <el-input type="password" v-model="loginForm.checkPass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+                    <el-button @click="resetForm('loginForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
+
+
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                var checkuser = (rule, value, callback) => {
+                      if (value === "") {
+                          callback(new Error("请输入用户名"))
+                      } else if(value.length > 12 || value.length < 6){
+                        callback(new Error("用户名的长度在6到12位之间"))
+                      }else{
+                          callback();
+                      }
+                };
+                var validatePass = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请输入密码'));
+                    } else {
+                        if (this.loginForm.checkPass !== '') {
+                            this.$refs.loginForm.validateField('checkPass');
+                        }
+                        callback();
+                    }
+                };
+                var validatePass2 = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请再次输入密码'));
+                    } else if (value !== this.loginForm.pass) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return {
+                    loginForm: {
+                        pass: '',
+                        checkPass: '',
+                        username: ''
+                    },
+                    rules: {
+                        pass: [
+                            { validator: validatePass, trigger: 'blur' }
+                        ],
+                        checkPass: [
+                            { validator: validatePass2, trigger: 'blur' }
+                        ],
+                        username: [
+                            { validator: checkuser, trigger: 'blur' }
+                        ]
+                    }
+                };
+            },
+            methods: {
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                             //获取填入的信息
+                             let userInfo = {
+                                   username:this.loginForm.username,
+                                   pass:this.loginForm.pass,
+                                   
+                             }
+                            //连接后端，发送请求
+                            $.post('/users/loginCheck',userInfo,(data)=>{
+                                if (data.errcode === 1) {
+                                    alert(data.msg);
+                                    //跳转页面到首页
+                                   location.href="./index.html";
+                                } else {
+                                    alert(data.msg);
+                                    
+                                }
+                            })
+
+
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                }
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统</title>
+    <!-- 引入elementui的样式 -->
+    <link rel="stylesheet" href="./libs/elementui/css/elementui.css">
+    <!-- 引入自己的样式 -->
+    <link rel="stylesheet" href="./css/index.css">
+    <!-- 引入vue -->
+    <script src="./libs/vue/vue.js"></script>
+    <!-- 引入elementui的脚本 -->
+    <script src="./libs/elementui/js/elementui.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            
+
+
+            <el-container>
+                <el-header>
+                    <h1>欢迎您 admin</h1>
+                    <p>查看详细的系统信息。</p>
+
+                </el-header>
+                <el-main>
+                    <!-- 主题部分 -->
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>系统信息</span>
+                        </div>
+                        <div  class="text item">
+                            <el-alert title="警告提示的文案" type="warning" show-icon style="background-color: #dbe3ff;color: blue;margin-top: 10px;border: 1px solid #a2b4ee">
+                            </el-alert>
+                            <el-alert title="警告提示的文案" type="warning" show-icon style="background-color: #dbe3ff;color: blue;margin-top: 10px;margin-bottom: 10px;border: 1px solid #a2b4ee">
+                            </el-alert>
+                            <el-row :gutter="20">
+                                <el-col :span="12">
+                                    <div class="grid-content bg-purple">
+                                        <el-card class="box-card">
+                                            <div slot="header" class="clearfix">
+                                                <span>系统信息</span>
+                                            </div>
+                                            <div  class="text item">
+                                                    <el-table
+                                                    :data="tableData"
+                                                    stripe
+                                                    >
+                                                    <el-table-column
+                                                      prop="goosName"
+                                                      label="商品名称"
+                                                      width="275px">
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                      prop="sails"
+                                                      label="销量"
+                                                      >
+                                                    </el-table-column>
+                                                  </el-table>
+                                            </div>
+                                        </el-card>
+                                    </div>
+                                </el-col>
+                                <el-col :span="12">
+                                    <div class="grid-content bg-purple">
+                                        <el-card class="box-card">
+                                            <div slot="header" class="clearfix">
+                                                <span>系统信息</span>
+                                            </div>
+                                            <div  class="text item">
+                                                    <el-table
+                                                    :data="tableData"
+                                                    stripe
+                                                    >
+                                                    <el-table-column
+                                                      prop="goosName"
+                                                      label="商品名称"
+                                                      width="275px">
+                                                    </el-table-column>
+                                                    <el-table-column
+                                                      prop="sails"
+                                                      label="销量"
+                                                      >
+                                                    </el-table-column>
+                                                  </el-table>
+                                                
+                                            </div>
+                                        </el-card>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </el-card>
+                </el-main>
+                <!-- 尾部内容 -->
+                <el-footer>
+                    &copy; Copyright 2018 华联超市管理系统
+                </el-footer>
+            </el-container>
+        </el-container>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+      return {
+        tableData: [{
+            goosName: '立白洗衣粉',
+            sails: '34，200',
+        },{
+            goosName: '立白洗衣粉',
+            sails: '34，200',
+        },{
+            goosName: '立白洗衣粉',
+            sails: '34，200',
+        }
+    ]
+      }
+    },
+            methods: {
+                handleOpen(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                handleClose(key, keyPath) {
+                    console.log(key, keyPath);
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

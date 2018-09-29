@@ -1,0 +1,193 @@
+.el-header{
+    background-color: #fff;
+    color: #222;
+    text-align: left;
+    height: 120px!important;
+  }
+  /* 左侧部分 */
+  .el-aside {
+    background-image: url("../images/left_bg.png");
+    width: 230px!important;
+    
+  }
+  .el-aside h2{
+      color: #d1d0cf;
+      margin-top: 50px;
+  }
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
+  }
+  
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+  
+
+  
+
+  html,body,#app,.el-container{
+      height: 100%;
+  }
+  *{
+      margin: 0;
+      padding: 0;
+  }
+  #asideHead{
+      text-align: right;
+      padding-right: 15px;
+      margin-bottom: 25px;
+  }
+  #asideHead p:first-of-type{
+      margin-top: 50px;
+      color: #ccc;
+      font-size: 12px;
+  }
+  #asideHead p:first-of-type span{
+      color:#888;
+  }
+  #asideHead p:last-of-type{
+    margin-top: 28px;
+    font-size: 12px;
+    color: #888
+  }
+  #asideHead p:last-of-type a{
+      text-decoration: none;
+      color: #ccc;
+  }
+  /* 左侧导航栏 */
+  .el-menu-item-group__title{
+      padding: 0;
+      margin: 0;
+  }
+  .el-submenu__title{
+      background: #66ab00;
+      text-align: right;
+      color: #fff;
+      margin-left: 20px;
+      border-radius: 5px 0 0 5px;
+      height: 34px;
+      line-height: 34px;
+      padding-right: 50px;
+  }
+  .el-submenu__title i{
+    color: #fff; 
+    
+
+  }
+  .el-submenu{
+      margin-top: 15px;
+      
+      
+     
+  }
+  .el-menu{
+      background-color: transparent;
+      /* margin-top: 40px; */
+      border: none;
+  }
+  .el-submenu__title:hover{
+      background-color: red;
+      
+      
+  }
+  .el-menu-item:hover{
+    background-color: #fff;
+    color: #333;
+  }
+  .el-menu-item{
+      text-align: right;
+      padding-right: 15px!important;
+      margin-left: 20px;
+      margin-top: 10px;
+      border-radius: 5px 0 0 5px;
+      background: transparent;
+      color: #fff;
+      height: 30px!important;
+      line-height: 30px!important;
+  }
+  .el-submenu__title i{
+      color: #fff
+  }
+  .el-header h1{
+      font-size: 28px;
+      margin-top: 25px;
+  }
+  .el-header p{
+    font-size: 18px;
+    margin-top: 10px;
+    color: #555;
+}
+
+/* 卡片 */
+.text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+.el-main{
+   line-height: 20px;
+   text-align: left;
+}
+.el-card__header{
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    text-align: left;
+    line-height: 10px;
+}
+.box-card .clearfix span{
+    color: #222;
+    font-size: 20px;
+    font-weight: bold;
+}
+.el-footer{
+    height: 60px!important;
+    line-height: 60px;
+    font-size: 12px;
+}
+.adduserform{
+    width: 300px;
+}
+.adduserform .el-form-item .el-input input{
+    height: 30px;
+}
+.clearfix{
+    position: relative;
+}
+.clearfix #headmenu{
+    list-style: none;
+    position: absolute;
+    top: 0px;
+    right: 0;
+}
+.clearfix #headmenu li{
+    float: left;
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 12px;
+    
+
+}
+.current{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+}
+a{
+    text-decoration: none;
+}

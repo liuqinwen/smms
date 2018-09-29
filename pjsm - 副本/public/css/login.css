@@ -1,0 +1,26 @@
+html,body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+#box1{
+    height: 340px;
+    width: 400px;
+    background-color: #fff; 
+    padding-right: 40px;  
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 10px;
+}
+#app{
+    height: 100%;
+    position: relative;
+    background-image: url("../images/body_bg.png")
+}
+#box1 #title{
+    margin-left: 30px;
+}

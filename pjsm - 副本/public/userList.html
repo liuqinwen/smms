@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统</title>
+    <!-- 引入elementui的样式 -->
+    <link rel="stylesheet" href="./libs/elementui/css/elementui.css">
+    <!-- 引入自己的样式 -->
+    <link rel="stylesheet" href="./css/index.css">
+    <!-- 引入jquery -->
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./libs/vue/vue.js"></script>
+    <!-- 引入moment -->
+    <script src="./libs/moment/moment.js"></script>
+    <!-- 引入elementui的脚本 -->
+    <script src="./libs/elementui/js/elementui.js"></script>
+    <!-- 检测用户是否登录 -->
+    <script src="/users/checkIsLog"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+
+
+
+            <el-container>
+                <el-header>
+                    <h1>欢迎您 admin</h1>
+                    <p>查看所有管理员账号</p>
+
+                </el-header>
+                <el-main>
+                    <!-- 主题部分 -->
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>系统信息</span>
+                            <ul id="headmenu">
+                                <li class="current">账号管理</li>
+                                <li>添加账号</li>
+                                <li>密码修改</li>
+                            </ul>
+                        </div>
+                        <div class="text item">
+                            <el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                                <el-table-column type="selection">
+                                </el-table-column>
+                                <el-table-column prop="username" label="用户名">
+                                </el-table-column>
+                                <el-table-column prop="userlist" label="用户组别" show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column label="日期">
+                                    <template slot-scope="scope">{{ scope.row.ctime | formatCtime}}</template>
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button size="mini" @click="handleEdit( scope.row.id)">
+                                            <i class="el-icon-edit"></i>编辑</el-button>
+                                        <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
+                                            <i class="el-icon-delete"></i>删除</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div  style="text-align: center;margin-top: 20px;">
+                                <el-pagination
+                                  @size-change="handleSizeChange"
+                                  @current-change="handleCurrentChange"
+                                  :current-page="currentPage"
+                                  :page-sizes="[1, 5, 10, 20, 40]"
+                                  :page-size="pageSize"
+                                  layout="total, sizes, prev, pager, next, jumper"
+                                  :total="totalCount">
+                                </el-pagination>
+                              </div>
+                            <div style="margin-top: 20px">
+                                <el-button @click="selectDele()">批量删除</el-button>
+                                <el-button @click="desselectAll()">取消选择</el-button>
+                            </div>
+                        </div>
+                    </el-card>
+                </el-main>
+                <!-- 尾部内容 -->
+                <el-footer>
+                    &copy; Copyright 2018 华联超市管理系统
+                </el-footer>
+            </el-container>
+        </el-container>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    tableData3: [],
+                    multipleSelection: [],
+                    totalCount:'',
+                    currentPage:1,
+                    pageSize:5
+                }
+            },
+            created() {
+                this.getallData();
+            },
+            methods: {
+                //页面的数据条数改变
+             handleSizeChange(val){
+               //将改变的页码条数赋值给pageSize
+               this.pageSize = val;
+               this.getallData();
+                         },
+                         //页码的改变
+                handleCurrentChange(val){
+                    //将改变的页码赋值给currentPage
+                  this.currentPage = val;
+                this.getallData();
+                  
+                            },
+                //刷新页面的方法
+                getallData() {
+                    var _this = this;
+
+                   //令个对象，保存pageSize和currentPage
+                   let params = {
+                       pageSize: this.pageSize,
+                       currentPage: this.currentPage
+                   } 
+                           //连接数据库，将数据传给后端
+                    $.get('/users/userList',params, function (data) {
+                        _this.totalCount = data.totalCount;
+                         if (!data.pageData.length) {
+                            // _this.tableData3.currentPage -= 1;
+                            location.href="./userList.html";
+                         }
+
+                        _this.tableData3 = data.pageData;
+                        
+                    })
+                   
+                },
+                //批量删除选中的数据
+                selectDele() {
+                    let _this = this;
+                    //取到选中的每一个信息的id（为数组）
+                    let idArr = this.multipleSelection.map(v => v.id);
+                    //判断如果选中的数据为空，就不执行以下操作
+                    if (!idArr.length) {
+                        alert('请选中后再执行操作，谢谢');
+                        return false;
+                    }
+                    //向后端发送ajax请求
+                    $.post('/users/selectDele', { "idArr": idArr }, function (data) {
+
+                        if (data.errcode === 1) {
+                            //执行成功
+                            alert(data.msg);
+                            //刷新页面
+                            _this.getallData();
+                        } else {
+                            alert(data.msg);
+                        }
+                    })
+                },
+                //取消选中状态
+                desselectAll() {
+                    this.$refs.multipleTable.clearSelection();
+                },
+                //选中就触发
+                handleSelectionChange(val) {
+                    this.multipleSelection = val;
+                },
+                //修改方法的实现
+                handleEdit(id) {
+                    location.href = `./userEdit.html?id=${id}`;
+
+                },
+                //删除方法
+                handleDelete(id) {
+                    var _this = this;
+                    //想后端发送ID信息
+                    $.get(`/users/userDele?id=${id}`, function (data) {
+                        if (data.errcode === 1) {
+                            //成功删除  显示对应的信息
+                            alert(data.msg)
+                            //刷新页面
+                            _this.getallData();
+                        } else {
+                            alert(data.msg)
+                        }
+                    })
+
+                }
+            },
+            //过滤事件格式
+            filters: {
+                formatCtime(value) {
+                    return moment(value).format("YYYY-MM-DD HH:mm:ss")
+                }
+            }
+
+
+        })
+
+    </script>
+</body>
+
+</html>

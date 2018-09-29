@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统</title>
+    <!-- 引入elementui的样式 -->
+    <link rel="stylesheet" href="./libs/elementui/css/elementui.css">
+    <!-- 引入自己的样式 -->
+    <link rel="stylesheet" href="./css/index.css">
+    <!-- 引入jquery -->
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <!-- 引入vue -->
+    <script src="./libs/vue/vue.js"></script>
+    <!-- 引入moment -->
+    <script src="./libs/moment/moment.js"></script>
+    <!-- 引入elementui的脚本 -->
+    <script src="./libs/elementui/js/elementui.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+
+
+
+            <el-container>
+                <el-header>
+                    <h1>欢迎您 admin</h1>
+                    <p>查看所有管理员账号</p>
+
+                </el-header>
+                <el-main>
+                    <!-- 主题部分 -->
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>系统信息</span>
+                            <ul id="headmenu">
+                                <li>添加库存</li>
+                                <li class="current">库存情况</li>
+                            </ul>
+                        </div>
+                        <div class="text item">
+                            <el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+                                <el-table-column type="selection">
+                                </el-table-column>
+                                <el-table-column prop="goodsMark" label="商品条形码">
+                                </el-table-column>
+                                <el-table-column prop="goodsName" label="商品名称" show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column prop="enterPrice" label="进价" show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column prop="goodsAmount" label="入库" show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column label="日期">
+                                    <template slot-scope="scope">{{ scope.row.ctime | formatCtime}}</template>
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button size="mini" @click="handleEdit(scope.row.id)">
+                                            <i class="el-icon-edit"></i>
+                                        </el-button>
+                                        <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
+                                            <i class="el-icon-delete"></i>
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="block" style="text-align: center;margin-top: 20px;">
+                                <el-pagination
+                                  @size-change="handleSizeChange"
+                                  @current-change="handleCurrentChange"
+                                  :current-page="currentPage"
+                                  :page-sizes="[1, 5, 10, 20, 50]"
+                                  :page-size="pageSize"
+                                  layout="total, sizes, prev, pager, next, jumper"
+                                  :total="totalCount">
+                                </el-pagination>
+                              </div>
+                            <!-- <div style="margin-top: 20px">
+                                <el-button @click="toggleSelection([tableData3[1], tableData3[2]])">切换第二、第三行的选中状态</el-button>
+                                <el-button @click="toggleSelection()">取消选择</el-button>
+                            </div> -->
+                        </div>
+                    </el-card>
+                </el-main>
+                <!-- 尾部内容 -->
+                <el-footer>
+                    &copy; Copyright 2018 华联超市管理系统
+                </el-footer>
+            </el-container>
+        </el-container>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    tableData3: [],
+                    multipleSelection: [],
+                    currentPage:1,
+                    pageSize:5,
+                    totalCount:''
+                }
+            },
+            created() {
+                this.getallData();
+               
+                
+            },
+            methods: {
+                handleSizeChange(val) {
+                    //val赋值pageSize
+                this.pageSize = val;
+                this.getallData();
+                },
+                handleCurrentChange(val) {
+                   //val赋值给currentPage
+                   this.currentPage = val;
+                   this.getallData();
+                },
+                //刷新页面的方法
+                getallData() {
+                    var _this = this;
+                    //定义对象 将页面条数和页码传入进去
+                   let pramas = {
+                       pageSize : this.pageSize,
+                       currentPage : this.currentPage
+                   }
+
+
+                    $.get('/goods/goodsList',pramas, function (data) {
+                           _this.totalCount = data.totalCount;
+                                //  if (!data.pageData.length) {
+                                //      location.href = "./goodsList.html"
+                                //  },
+                                if (!data.pageData.length) {
+                            // _this.tableData3.currentPage -= 1;
+                            location.href="./goodsList.html";
+                         }
+                           _this.tableData3 = data.pageData;
+                    })
+                },
+                toggleSelection(rows) {
+                    if (rows) {
+                        rows.forEach(row => {
+                            this.$refs.multipleTable.toggleRowSelection(row);
+                        });
+                    } else {
+                        this.$refs.multipleTable.clearSelection();
+                    }
+                },
+                handleSelectionChange(val) {
+                    this.multipleSelection = val;
+                },
+                // 修改方法的实现
+                handleEdit(id) {
+                    location.href = `./goodsEdit.html?id=${id}`
+                },
+                //删除方法
+                handleDelete(id) {
+                    var _this = this;
+                    //想后端发送ID信息
+                    $.get(`/goods/goodsDele?id=${id}`, function (data) {
+                        if (data.errcode === 1) {
+                            //成功删除  显示对应的信息
+                            alert(data.msg)
+                            //刷新页面
+                            _this.getallData();
+                        } else {
+                            alert(data.msg)
+                        }
+                    })
+
+                }
+            },
+            //过滤事件格式
+            filters: {
+                formatCtime(value) {
+                    return moment(value).format("YYYY-MM-DD HH:mm:ss")
+                }
+            }
+
+
+        })
+
+    </script>
+</body>
+
+</html>
